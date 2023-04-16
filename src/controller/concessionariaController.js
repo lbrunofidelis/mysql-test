@@ -1,28 +1,30 @@
-const connection = require('../connection');
+const { ConcessionariaService } = require('../services/ConcessionariaService');
 
-const todasConcessionarias = async () => {
-    const [query] = await connection.execute('SELECT * from speeds.concessionaria');
-    return query;
-};
+class ConcessionariaController { 
 
-const getConcessionaria = async (id) => {
-    const [query] = await connection.execute(`SELECT * from speeds.concessionaria WHERE ${id} = id_concessionaria`);
-    return query;
-};
-
-const postConcessionaria = async (nome_con, endereco, descricao, nivel_satisfacao, info_contrato, estado_id_estado) => {
-    const [query] = await connection.execute(`INSERT INTO concessionaria VALUE (NULL, "${nome_con}", "${endereco}", "${descricao}", ${nivel_satisfacao}, "${info_contrato}", ${estado_id_estado})`);
-    return query;
 }
 
-const deleteConcessionaria = async (id) => {
-    const [query] = await connection.execute(`DELETE FROM concessionaria WHERE ${id} = id_concessionaria`);
-    return query;
-}
+module.exports = { ConcessionariaController }
 
-module.exports = {
-    todasConcessionarias,
-    getConcessionaria,
-    postConcessionaria,
-    deleteConcessionaria
-};  
+// app.get('/concessionarias', async (request, response) => {
+//     const concessionarias = await todasConcessionarias();
+//     return response.status(200).json(concessionarias);
+// });
+
+// app.get('/concessionaria/:id', async(request, response) => {
+//     const id = request.params.id;
+//     const concessionaria = await getConcessionaria(id);
+//     return response.status(200).json(concessionaria);
+// });
+
+// app.post('/concessionaria/novo', async (request, response) => {
+//     const{nome_con, endereco, descricao, nivel_satisfacao, info_contrato, estado_id_estado} = request.body;
+//     const resultado = await postConcessionaria(nome_con, endereco, descricao, nivel_satisfacao, info_contrato, estado_id_estado);
+//     return response.status(200).json("Concessionaria inserida com sucesso");
+// });
+
+// app.delete('/concessionaria/:id', async (request, response) => {
+//     const id = request.params.id;
+//     const resultado = await deleteConcessionaria(id);
+//     return response.status(200).json(`A Concessionaria ${id} foi excluída com sucesso`);
+// });

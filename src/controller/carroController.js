@@ -1,30 +1,39 @@
-const connection = require('../connection');
+const { CarroService } = require('../services/CarroService');
 
-const todosCarros = async () => {
-    const [query] = await connection.execute('SELECT * FROM speeds.carro');
-    return query;
-};
+class CarroController {
+    async getTodos(request, response) {
+        const carroService = new CarroService();
+        const carros = await carroService.buscarTodos();
+        return response.status(200).json(carros);
+    }
 
-const getCarro = async (id) => {
-    const [query] = await connection.execute(`SELECT * FROM speeds.carro WHERE ${id} = id_carro`);
-    return query;
-};
+    async getCarro(request, response) { 
+        const id = request.params.id;
+        const carroService = new CarroService();
+        const carro = await carroService.buscar(id);
 
-const postCarro = async (marca, modelo, ano_fabri, pot_motor, num_marchas, preco_fabri, cap_tanque, con_medio) => {
-    const [query] = await connection.execute(`INSERT INTO carro VALUE 
-    (NULL, "${marca}", "${modelo}", ${ano_fabri}, "${pot_motor}", ${num_marchas}, ${preco_fabri}, "${cap_tanque}", "${con_medio}")`);
+        if(carro.length === 0) {
+            return response.status(400).json("Carro não existente");
+        }
+
+        return response.status(200).json(carro);
+    }
+
+    async criar(request, response) { 
+        const { marca, modelo, ano_fabri, pot_motor, num_marchas, preco_fabri, cap_tanque, con_medio } = request.body;
+        const carroService = new CarroService();
+        const resultado = await carroService.inserir(marca, modelo, ano_fabri, pot_motor, num_marchas, preco_fabri, cap_tanque, con_medio);
     
-    return query
+        return response.status(200).json("Carro inserido com sucesso");
+    }
+
+    async excluir(request, response) { 
+        const id = request.params.id;
+        const carroService = new CarroService();
+        const resultado = await carroService.excluir(id);
+
+        return response.status(200).json(`Carro ${id} excluído com sucesso`);
+    }
 }
 
-const deleteCarro = async (id) => {
-    const [query] = await connection.execute(`DELETE FROM carro WHERE ${id} = id_carro`);
-    return query;
-}
-
-module.exports = {
-    todosCarros,
-    getCarro,
-    postCarro,
-    deleteCarro
-};
+module.exports = { CarroController }
